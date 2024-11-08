@@ -17,12 +17,32 @@ echo "Adding simspace to the sudoers file..."
 echo "simspace ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 echo "User simspace granted sudo privileges."
 
+# Step 2.5: Move trainee files to simspace
+directory="/home/simspace/Desktop"
+
+echo "Moving trainee files to simspace Desktop"
+mv /home/trainee/Desktop/* $directory
+# Iterate over each file in the directory
+for file in "$directory"/*; do
+    # Skip if it's not a file
+    if [[ -f "$file" ]]; then
+        # Check if the file is owned by trainee
+        if [[ $(stat -c '%U' "$file") == "trainee" ]]; then
+            echo "File $file is owned by trainee. Changing owner to simspace..."
+            chown simspace:simspace "$file"
+            echo "Ownership of $file changed to simspace."
+         fi
+    fi
+done
+
 # Step 3: Remove the user trainee if they exist
 if id "trainee" &>/dev/null; then
     echo "Removing user trainee..."
     killall -u trainee
     userdel -r trainee
     echo "User trainee removed from the system."
+    rm -rf /home/trainee/
+    rmdir /home/trainee
 else
     echo "User trainee does not exist."
 fi
