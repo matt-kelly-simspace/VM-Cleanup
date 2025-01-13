@@ -35,18 +35,6 @@ for file in "$directory"/*; do
     fi
 done
 
-# Step 3: Remove the user trainee if they exist
-if id "trainee" &>/dev/null; then
-    echo "Removing user trainee..."
-    killall -u trainee
-    userdel -r trainee
-    echo "User trainee removed from the system."
-    rm -rf /home/trainee/
-    rmdir /home/trainee
-else
-    echo "User trainee does not exist."
-fi
-
 # Define backup file paths
 passwd_backup="/etc/passwd.bak"
 shadow_backup="/etc/shadow.bak"
@@ -74,5 +62,19 @@ echo "TRAINEE entry removed from /etc/shadow."
 echo "Script completed successfully."
 
 # Post: Remove backups
-rm passwd_backup
-rm shadow_backup
+rm "$passwd_backup"
+rm "$shadow_backup"
+
+# REBOOT
+
+# Step 3: Remove the user trainee if they exist
+if id "trainee" &>/dev/null; then
+    echo "Removing user trainee..."
+    killall -u trainee
+    userdel -r trainee
+    echo "User trainee removed from the system."
+    rm -rf /home/trainee/
+    rmdir /home/trainee
+else
+    echo "User trainee does not exist."
+fi
