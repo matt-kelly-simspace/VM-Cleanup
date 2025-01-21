@@ -23,7 +23,7 @@ directory="/home/simspace/"
 echo "Moving trainee files to simspace Desktop"
 mv /home/trainee/ $directory
 
-echo "Changing ownership from trainee -> simspace
+echo "Changing ownership from trainee -> simspace"
 cd "$directory"
 chown -R simspace:simspace *
 
