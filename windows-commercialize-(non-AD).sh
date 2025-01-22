@@ -4,6 +4,9 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     exit 1
 }
 
+# Step 0: Disable Password Complexity profile
+secedit /export /cfg C:\Windows\Temp\secpol.cfg; (Get-Content C:\Windows\Temp\secpol.cfg).Replace("PasswordComplexity = 1", "PasswordComplexity = 0") | Set-Content C:\Windows\Temp\secpol.cfg; secedit /configure /db secedit.sdb /cfg C:\Windows\Temp\secpol.cfg /areas SECURITYPOLICY; Remove-Item C:\Windows\Temp\secpol.cfg
+
 # Step 1: Add the user 'simspace' with a home directory
 Write-Host "Adding user 'simspace' with home directory C:\Users\simspace..."
 New-LocalUser -Name "simspace" -Description "Standard User" -Password (ConvertTo-SecureString "simspace1" -AsPlainText -Force) -PasswordNeverExpires -UserMayNotChangePassword
@@ -33,6 +36,8 @@ if ($traineeSessions) {
 }
 
 Write-Host "Script completed successfully."
+# Step 5: Reenable Password Complexity profile
+secedit /export /cfg C:\Windows\Temp\secpol.cfg; (Get-Content C:\Windows\Temp\secpol.cfg).Replace("PasswordComplexity = 0", "PasswordComplexity = 1") | Set-Content C:\Windows\Temp\secpol.cfg; secedit /configure /db secedit.sdb /cfg C:\Windows\Temp\secpol.cfg /areas SECURITYPOLICY; Remove-Item C:\Windows\Temp\secpol.cfg
 
 
 # Remove the user 'trainee', after signing out.
