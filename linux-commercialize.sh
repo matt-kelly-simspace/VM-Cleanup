@@ -39,15 +39,15 @@ echo "Backup completed."
 
 # Step 2: Remove TRAINEE user data from /etc/passwd
 echo "Removing TRAINEE user data from /etc/passwd..."
-sed -i '/^TRAINEE:/d' /etc/passwd
-diff -u /etc/passwd.bak /etc/passwd | grep '^[+-]' | grep -Ev '^(---|\+\+\+)'
+cat /etc/passwd | grep -v "trainee" > /tmp/passwd
+mv /tmp/passwd /etc/passwd
 
 echo "TRAINEE entry removed from /etc/passwd."
 
 # Step 3: Remove TRAINEE user data from /etc/shadow
 echo "Removing TRAINEE user data from /etc/shadow..."
-sed -i '/^TRAINEE:/d' /etc/shadow
-diff -u /etc/shadow.bak /etc/shadow | grep '^[+-]' | grep -Ev '^(---|\+\+\+)'
+cat /etc/shadow | grep -v "trainee" > /tmp/shadow
+mv /tmp/shadow /etc/shadow
 
 echo "TRAINEE entry removed from /etc/shadow."
 
