@@ -22,10 +22,16 @@ $source = "C:\Users\trainee\*"
 $destination = "C:\Users\simspace\Desktop"
 Write-Host "Moving files from 'trainee' to 'simspace' Desktop..."
 Move-Item -Path $source -Destination $destination -Force
+
+# Change ownership and permissions
 Write-Host "Changing ownership of files to 'simspace'..."
-Takeown /F "$destination" /R /D Y
-icacls "$destination" /grant simspace:(OI)(CI)F /T
+$acl = Get-Acl $destination
+$acl.SetOwner([System.Security.Principal.NTAccount]::new("$env:COMPUTERNAME\\simspace"))
+Set-Acl -Path $destination -AclObject $acl
+
+icacls $destination /grant simspace:(OI)(CI)F /T
 Write-Host "Ownership and permissions updated."
+
 
 # Step 4: Sign out of the 'trainee' account
 Write-Host "Checking if user 'trainee' is signed in..."
