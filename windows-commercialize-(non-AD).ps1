@@ -40,7 +40,7 @@ Write-Host "Script completed successfully."
 secedit /export /cfg C:\Windows\Temp\secpol.cfg; (Get-Content C:\Windows\Temp\secpol.cfg).Replace("PasswordComplexity = 0", "PasswordComplexity = 1") | Set-Content C:\Windows\Temp\secpol.cfg; secedit /configure /db secedit.sdb /cfg C:\Windows\Temp\secpol.cfg /areas SECURITYPOLICY; Remove-Item C:\Windows\Temp\secpol.cfg
 
 
-# Remove the user 'trainee', after signing out.
+# Step 6: Remove the user 'trainee', after signing out.
 if (Get-LocalUser | Where-Object { $_.Name -eq "trainee" }) {
     Write-Host "Removing user 'trainee'..."
     Stop-Process -Name "trainee" -Force -ErrorAction SilentlyContinue
@@ -51,3 +51,5 @@ if (Get-LocalUser | Where-Object { $_.Name -eq "trainee" }) {
     Write-Host "User 'trainee' does not exist."
 }
 
+#Clear out the powershell command history
+(Get-PSReadLineOption).HistorySavePath | ForEach-Object { Remove-Item $_ -Force -ErrorAction SilentlyContinue; New-Item $_ -ItemType File -Force }
