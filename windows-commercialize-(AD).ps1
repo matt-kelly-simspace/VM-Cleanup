@@ -47,4 +47,4 @@ if (Get-ADUser -Filter { SamAccountName -eq "trainee" }) {
 Write-Host "Script completed successfully."
 
 # Optionally restart the system (uncomment the line below if required)
-# Restart-Computer -Force
+Restart-Computer -Force
