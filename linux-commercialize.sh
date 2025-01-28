@@ -8,7 +8,7 @@ fi
 
 # Step 1: Add the user simspace with a home directory in /home/simspace
 echo "Adding user simspace with home directory /home/simspace..."
-useradd -m -d /home/simspace -s /bin/zsh simspace
+useradd -m -d /home/simspace -s /bin/zsh simspace -g simspace
 echo "simspace:simspace1" | chpasswd
 echo "User simspace added with password simspace."
 
