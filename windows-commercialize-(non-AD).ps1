@@ -18,7 +18,7 @@ Add-LocalGroupMember -Group "Administrators" -Member "simspace"
 Write-Host "User 'simspace' granted administrative privileges."
 
 # Step 3: Move files from 'trainee' to 'simspace'
-$source = "C:\Users\trainee\*"
+$source = "C:\Users\trainee\Desktop\*"
 $destination = "C:\Users\simspace\Desktop"
 Write-Host "Moving files from 'trainee' to 'simspace' Desktop..."
 Move-Item -Path $source -Destination $destination -Force
