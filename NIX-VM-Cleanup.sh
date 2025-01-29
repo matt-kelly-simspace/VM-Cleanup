@@ -6,7 +6,11 @@ rm -rf /tmp/*
 
 rm -rf /root/.wget-hsts
 
-cat /dev/null | tee /root/.bash_history /home/<USER>/.bash_history && history -c && init 0
+# Clear out history. Works with bash, but not with zsh.
+cat /dev/null | tee /root/.bash_history /home/simspace/.bash_history && history -c && init 0
+
+#Uncomment this to just remove the history session
+#exec rm "$HISTFILE" 
 
 find / -type f -name '.bash_history'
 
