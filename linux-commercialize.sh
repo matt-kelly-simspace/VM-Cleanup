@@ -6,6 +6,12 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+# Double check to make sure simspace is not already a user
+if id "simspace" &>/dev/null; then
+    echo "Simspace user already exists on the system..."
+    exit 1
+fi
+
 # Step 1: Add the user simspace with a home directory in /home/simspace
 echo "Adding user simspace with home directory /home/simspace..."
 useradd -m -d /home/simspace -s /bin/zsh simspace -g simspace
@@ -17,7 +23,7 @@ echo "Adding simspace to the sudoers file..."
 echo "simspace ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 echo "User simspace granted sudo privileges."
 
-# Step 2.5: Move trainee files to simspace
+# Step 3: Move trainee files to simspace
 directory="/home/simspace/"
 
 echo "Moving trainee files to simspace Desktop"
@@ -31,42 +37,31 @@ chown -R simspace:simspace *
 passwd_backup="/etc/passwd.bak"
 shadow_backup="/etc/shadow.bak"
 
-# Step 1: Back up /etc/passwd and /etc/shadow
+# Step 4: Back up /etc/passwd and /etc/shadow
 echo "Backing up /etc/passwd and /etc/shadow..."
 cp /etc/passwd "$passwd_backup"
 cp /etc/shadow "$shadow_backup"
 echo "Backup completed."
 
-# Step 2: Remove TRAINEE user data from /etc/passwd
+# Step 5: Remove TRAINEE user data from /etc/passwd
 echo "Removing TRAINEE user data from /etc/passwd..."
 cat /etc/passwd | grep -v "trainee" > /tmp/passwd
 mv /tmp/passwd /etc/passwd
 
 echo "TRAINEE entry removed from /etc/passwd."
 
-# Step 3: Remove TRAINEE user data from /etc/shadow
+# Step 6: Remove TRAINEE user data from /etc/shadow
 echo "Removing TRAINEE user data from /etc/shadow..."
 cat /etc/shadow | grep -v "trainee" > /tmp/shadow
 mv /tmp/shadow /etc/shadow
 
 echo "TRAINEE entry removed from /etc/shadow."
-
 echo "Script completed successfully."
 
 # Post: Remove backups
 rm "$passwd_backup"
 rm "$shadow_backup"
 
-# REBOOT
-
-# Step 3: Remove the user trainee if they exist
-if id "trainee" &>/dev/null; then
-    echo "Removing user trainee..."
-    killall -u trainee
-    userdel -r trainee
-    echo "User trainee removed from the system."
-    rm -rf /home/trainee/
-    rmdir /home/trainee
-else
-    echo "User trainee does not exist."
-fi
+echo "REBOOTING THE SYSTEM"
+sleep 5
+reboot
