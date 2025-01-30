@@ -2,9 +2,9 @@
 setlocal enabledelayedexpansion
 
 :: Define variables
-set USER1=USER1
-set USER2=USER2
-set PASSWORD=MYPASSWORD
+set USER1=trainee
+set USER2=simspace
+set PASSWORD=simspace1
 
 :: Check if USER2 already exists
 net user %USER2% >nul 2>&1
